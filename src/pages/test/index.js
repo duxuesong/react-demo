@@ -1,9 +1,18 @@
 import { Table, Tag, Space } from 'antd';
 import React, { PureComponent } from 'react'
-
+import EditModal from './components/EditModal'
+import styles from './test.less'
 class Test extends PureComponent {
   deleteHandle (record, e) {
     console.log(record, e, '点击删除事件')
+  }
+  editHandle (record) {
+    this.EditModal.showModal(record)
+    console.log(record, '编辑事件')
+  }
+  onRef (name, ref) {
+    console.log(name, ref, 'onRef--=--')
+    this.EditModal = ref
   }
   render () {
     const columns = [
@@ -48,8 +57,8 @@ class Test extends PureComponent {
         key: 'action',
         render: (text, record) => (
           <Space size="middle">
-            <a>Invite {record.name}</a>
-            <span onClick={e => this.deleteHandle(record, e)}>Delete</span>
+            <span onClick={() => this.editHandle(record)} className={styles.action}>Edit</span>
+            <span onClick={e => this.deleteHandle(record, e)} className={styles.action}>Delete</span>
           </Space>
         ),
       },
@@ -79,7 +88,10 @@ class Test extends PureComponent {
       },
     ];
     return (
-      <Table columns={columns} dataSource={data} />
+      <div>
+        <Table columns={columns} dataSource={data} />
+        <EditModal onRef={this.onRef.bind(this)} />
+      </div>
     )
   }
 }
